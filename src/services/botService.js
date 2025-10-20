@@ -1,4 +1,4 @@
-import { orderService } from "./orderService.js";
+const orderService = require("./orderService.js");
 
 class BotService {
   constructor() {
@@ -50,4 +50,7 @@ class BotService {
   }
 }
 
-export const botService = new BotService();
+const botService = new BotService();
+orderService.setBotService(botService);
+
+module.exports = botService;

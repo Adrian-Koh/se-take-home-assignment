@@ -1,12 +1,12 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   addBotHandler,
   removeBotHandler,
-} from "../controllers/botController.js";
+} = require("../controllers/botController.js");
 
 const router = express.Router();
 
 router.post("/", addBotHandler); // POST /bots
 router.delete("/", removeBotHandler); // DELETE /bots
 
-export default router;
+module.exports = router;

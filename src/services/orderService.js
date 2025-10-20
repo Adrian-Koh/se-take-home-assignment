@@ -1,10 +1,14 @@
-import { botService } from "./botService.js";
+let botServiceRef = null; // will be set externally
 
 class OrderService {
   constructor() {
     this.pending = [];
     this.complete = [];
     this.lastOrderId = 0;
+  }
+
+  setBotService(botService) {
+    botServiceRef = botService;
   }
 
   createOrder(type) {
@@ -26,7 +30,7 @@ class OrderService {
       this.pending.push(order);
     }
 
-    botService.processNext(); // trigger bots if idle
+    if (botServiceRef) botServiceRef.processNext(); // trigger bots if set
     return order;
   }
 
@@ -37,6 +41,7 @@ class OrderService {
   completeOrder(order) {
     order.status = "complete";
     this.complete.push(order);
+    this.pending = this.pending.filter((o) => o.id !== order.id);
   }
 
   returnToPending(order) {
@@ -52,4 +57,4 @@ class OrderService {
   }
 }
 
-export const orderService = new OrderService();
+module.exports = new OrderService();
