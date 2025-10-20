@@ -75,4 +75,20 @@ describe("OrderBotIntegration", () => {
     expect(orderService.complete).toContain(order1);
     expect(botService.processing.get(bot.id)).toBe(order2);
   });
+
+  test("destroying bot and creating a new one should place unprocessed order back in processing", () => {
+    const order1 = orderService.createOrder("normal");
+    const order2 = orderService.createOrder("normal");
+    const bot1 = botService.addBot();
+    expect(botService.processing.get(bot1.id)).toBe(order1);
+
+    botService.removeBot();
+    expect(orderService.pending).toHaveLength(2);
+    expect(botService.processing.size).toBe(0);
+
+    const bot2 = botService.addBot();
+    expect(botService.processing.size).toBe(1);
+    expect(botService.processing.get(bot2.id)).toBe(order1);
+    expect(orderService.pending).toContain(order2);
+  });
 });
