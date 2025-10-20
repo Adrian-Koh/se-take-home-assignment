@@ -1,4 +1,4 @@
-const orderService = require("../services/orderService.js");
+const { orderService } = require("../services/orderService.js");
 
 function createOrderHandler(req, res) {
   const { type } = req.body;

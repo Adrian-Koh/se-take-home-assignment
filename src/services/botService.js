@@ -1,4 +1,4 @@
-const orderService = require("./orderService.js");
+const { orderService, setBotService } = require("./orderService.js");
 
 class BotService {
   constructor() {
@@ -51,6 +51,6 @@ class BotService {
 }
 
 const botService = new BotService();
-orderService.setBotService(botService);
+setBotService(botService);
 
 module.exports = botService;

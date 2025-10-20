@@ -1,5 +1,5 @@
 const botService = require("../services/botService.js");
-const orderService = require("../services/orderService.js");
+const { orderService } = require("../services/orderService.js");
 
 describe("OrderService", () => {
   beforeEach(() => {
@@ -10,6 +10,11 @@ describe("OrderService", () => {
     botService.bots = [];
     botService.processing.clear();
     botService.nextBotId = 0;
+  });
+
+  afterEach(() => {
+    botService.bots.forEach((bot) => botService.removeBot(bot));
+    botService.bots = [];
   });
 
   test("should create a normal order", () => {
@@ -28,8 +33,18 @@ describe("OrderService", () => {
     expect(orderService.pending[1]).toBe(normalOrder);
   });
 
+  test("order should be not be in pending if under processing", () => {
+    const order = orderService.createOrder("normal");
+    botService.addBot();
+
+    expect(orderService.pending).not.toContain(order);
+    expect(botService.processing.values()).toContain(order);
+  });
+
   test("should complete order correctly", () => {
     const order = orderService.createOrder("normal");
+    botService.addBot();
+
     orderService.completeOrder(order);
 
     expect(order.status).toBe("complete");

@@ -7,10 +7,6 @@ class OrderService {
     this.lastOrderId = 0;
   }
 
-  setBotService(botService) {
-    botServiceRef = botService;
-  }
-
   createOrder(type) {
     const order = {
       id: ++this.lastOrderId,
@@ -41,7 +37,6 @@ class OrderService {
   completeOrder(order) {
     order.status = "complete";
     this.complete.push(order);
-    this.pending = this.pending.filter((o) => o.id !== order.id);
   }
 
   returnToPending(order) {
@@ -57,4 +52,9 @@ class OrderService {
   }
 }
 
-module.exports = new OrderService();
+function setBotService(service) {
+  botServiceRef = service;
+}
+
+const orderService = new OrderService();
+module.exports = { setBotService, orderService };

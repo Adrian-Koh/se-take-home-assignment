@@ -1,7 +1,5 @@
 const botService = require("../services/botService.js");
-const orderService = require("../services/orderService.js");
-
-jest.useFakeTimers();
+const { orderService } = require("../services/orderService.js");
 
 describe("BotService", () => {
   beforeEach(() => {
@@ -12,6 +10,12 @@ describe("BotService", () => {
     botService.bots = [];
     botService.processing.clear();
     botService.nextBotId = 0;
+  });
+
+  afterEach(() => {
+    botService.bots.forEach((bot) => botService.removeBot(bot));
+    botService.bots = [];
+    jest.clearAllTimers();
   });
 
   test("should add a bot", () => {
@@ -30,10 +34,10 @@ describe("BotService", () => {
   });
 
   test("should process an order", () => {
+    jest.useFakeTimers();
+
     const bot = botService.addBot();
     const order = orderService.createOrder("normal");
-
-    botService.processNext();
 
     // Fast-forward 10s
     jest.advanceTimersByTime(10000);
