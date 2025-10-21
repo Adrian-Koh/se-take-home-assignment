@@ -1,21 +1,9 @@
 const botService = require("../services/botService.js");
 const { orderService } = require("../services/orderService.js");
+const setupTestEnv = require("./testUtils.js");
 
 describe("OrderService", () => {
-  beforeEach(() => {
-    // Reset orders and bots before each test
-    orderService.pending = [];
-    orderService.complete = [];
-    orderService.lastOrderId = 0;
-    botService.bots = [];
-    botService.processing.clear();
-    botService.nextBotId = 0;
-  });
-
-  afterEach(() => {
-    botService.bots.forEach((bot) => botService.removeBot(bot));
-    botService.bots = [];
-  });
+  setupTestEnv();
 
   test("should create a normal order", () => {
     const order = orderService.createOrder("normal");
