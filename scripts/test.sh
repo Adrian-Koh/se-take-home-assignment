@@ -10,6 +10,7 @@ echo "Running unit tests..."
 
 # For Node.js projects:
 cd src 
+npm install
 npm test
 
 echo "Unit tests completed"
