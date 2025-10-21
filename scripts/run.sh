@@ -33,7 +33,7 @@ sleep 2  # Give it a moment to boot up
 
 # Step 3: Run the simulation script
 echo "Running API simulation..."
-node "$SIM_FILE" 
+node "$SIM_FILE" > result.txt
 
 # Step 4: Stop the server
 echo "Stopping server..."

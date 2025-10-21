@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { logFinalSummary } = require("./utils/logger");
+const { logFinalSummary, log } = require("./utils/logger");
 
 const API_URL = "http://localhost:3000";
 
@@ -20,4 +20,5 @@ async function delay(ms) {
   await axios.post(`${API_URL}/orders`, { type: "VIP" });
   await delay(10000);
   await axios.delete(`${API_URL}/bots`);
+  await axios.get(`${API_URL}/orders/summary`);
 })();

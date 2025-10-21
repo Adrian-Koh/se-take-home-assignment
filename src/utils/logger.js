@@ -4,20 +4,13 @@ function log(message) {
   console.log(line.trim());
 }
 
-function logFinalSummary({
-  totalOrders,
-  vipCount,
-  normalCount,
-  completed,
-  activeBots,
-  pending,
-}) {
+function logFinalSummary(orderStats, botStats) {
   const summary = `
 Final Status:
-- Total Orders Processed: ${totalOrders} (${vipCount} VIP, ${normalCount} Normal)
-- Orders Completed: ${completed}
-- Active Bots: ${activeBots}
-- Pending Orders: ${pending}
+- Total Orders Processed: ${orderStats.totalOrders} (${orderStats.vipCount} VIP, ${orderStats.normalCount} Normal)
+- Orders Completed: ${orderStats.completed}
+- Active Bots: ${botStats.active}
+- Pending Orders: ${orderStats.pending}
 `;
   console.log(summary);
 }

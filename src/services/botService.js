@@ -63,6 +63,13 @@ class BotService {
       }
     });
   }
+
+  getBots() {
+    return {
+      active: this.bots.filter((bot) => bot.status === "ACTIVE").length,
+      idle: this.bots.filter((bot) => bot.status === "IDLE").length,
+    };
+  }
 }
 
 const botService = new BotService();

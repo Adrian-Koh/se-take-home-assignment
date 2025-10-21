@@ -1,4 +1,6 @@
+const botService = require("../services/botService.js");
 const { orderService } = require("../services/orderService.js");
+const { logFinalSummary } = require("../utils/logger.js");
 
 function createOrderHandler(req, res) {
   const { type } = req.body;
@@ -14,4 +16,11 @@ function getOrdersHandler(req, res) {
   res.json(orderService.getOrders());
 }
 
-module.exports = { createOrderHandler, getOrdersHandler };
+function getSummaryHandler(req, res) {
+  const orderStats = orderService.getStats();
+  const botStats = botService.getBots();
+  logFinalSummary(orderStats, botStats);
+  res.status(201).json({ orderStats, botStats });
+}
+
+module.exports = { createOrderHandler, getOrdersHandler, getSummaryHandler };

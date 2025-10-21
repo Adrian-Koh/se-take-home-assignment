@@ -62,6 +62,23 @@ class OrderService {
       complete: this.complete,
     };
   }
+
+  getStats() {
+    const vipCount =
+      this.pending.filter((order) => order.type === "VIP").length +
+      this.complete.filter((order) => order.type === "VIP").length;
+    const normalCount =
+      this.pending.filter((order) => order.type === "Normal").length +
+      this.complete.filter((order) => order.type === "Normal").length;
+    const totalOrders = this.pending.length + this.complete.length;
+    return {
+      totalOrders,
+      vipCount,
+      normalCount,
+      completed: this.complete.length,
+      pending: this.pending.length,
+    };
+  }
 }
 
 function setBotService(service) {
