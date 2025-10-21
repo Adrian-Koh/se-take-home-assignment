@@ -1,6 +1,6 @@
-import express from "express";
-import ordersRouter from "./routes/orders.js";
-import botsRouter from "./routes/bots.js";
+const express = require("express");
+const ordersRouter = require("./routes/ordersRouter.js");
+const botsRouter = require("./routes/botsRouter.js");
 
 const app = express();
 const PORT = 3000;
