@@ -11,4 +11,12 @@ app.use(express.json());
 app.use("/orders", ordersRouter);
 app.use("/bots", botsRouter);
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode).json({
+    status: "error",
+    message: err.message || "An error occurred",
+  });
+});
+
+app.listen(PORT);

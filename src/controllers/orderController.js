@@ -2,7 +2,7 @@ const { orderService } = require("../services/orderService.js");
 
 function createOrderHandler(req, res) {
   const { type } = req.body;
-  if (!["vip", "normal"].includes(type)) {
+  if (!["vip", "normal"].includes(type.toLowerCase())) {
     return res.status(400).json({ error: "Invalid order type" });
   }
 

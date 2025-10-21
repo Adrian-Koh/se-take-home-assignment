@@ -1,4 +1,5 @@
 const { orderService, setBotService } = require("./orderService.js");
+const { log } = require("../utils/logger");
 
 class BotService {
   constructor() {
@@ -6,11 +7,14 @@ class BotService {
     this.processing = new Map(); // botId -> order
     this.nextBotId = 0;
     this.PROCESSING_TIME_MS = 10000; // 10 seconds per order
+    log("System initialized with 0 bots");
   }
 
   addBot() {
-    const bot = { id: ++this.nextBotId };
+    const botStatus = orderService.pending.length > 0 ? "ACTIVE" : "IDLE";
+    const bot = { id: ++this.nextBotId, status: botStatus };
     this.bots.push(bot);
+    log(`Bot #${bot.id} created - Status: ${botStatus}`);
     this.processNext();
     return bot;
   }
@@ -27,6 +31,8 @@ class BotService {
       orderService.returnToPending(processingOrder);
     }
 
+    log(`Bot #${bot.id} destroyed while ${bot.status}`);
+
     return bot;
   }
 
@@ -36,14 +42,23 @@ class BotService {
         const order = orderService.getNextPending();
         if (order) {
           this.processing.set(bot.id, order);
-          console.log(`Bot ${bot.id} started processing order ${order.id}`);
+          order.status = "PROCESSING";
+          log(
+            `Bot #${bot.id} picked up ${order.type} Order #${order.id} - Status: ${order.status}`
+          );
 
           bot.timeoutRef = setTimeout(() => {
-            orderService.completeOrder(order);
+            orderService.completeOrder(
+              order,
+              bot.id,
+              this.PROCESSING_TIME_MS / 1000
+            );
             this.processing.delete(bot.id);
-            console.log(`Bot ${bot.id} completed order ${order.id}`);
+            bot.status = "IDLE";
             this.processNext(); // immediately pick next order if available
           }, this.PROCESSING_TIME_MS);
+        } else {
+          log(`Bot #${bot.id} is now ${bot.status} - No pending orders`);
         }
       }
     });

@@ -1,3 +1,5 @@
+const { log } = require("../utils/logger");
+
 let botServiceRef = null; // will be set externally
 
 class OrderService {
@@ -8,23 +10,30 @@ class OrderService {
   }
 
   createOrder(type) {
+    const inputType =
+      type.toLowerCase() === "vip"
+        ? "VIP"
+        : type.toLowerCase() === "normal"
+        ? "Normal"
+        : "-";
     const order = {
       id: ++this.lastOrderId,
-      type,
-      status: "pending",
+      type: inputType,
+      status: "PENDING",
       createdAt: Date.now(),
     };
 
     // VIP orders go before normal orders, after existing VIPs
-    if (type === "vip") {
+    if (inputType === "VIP") {
       const firstNormalIndex = this.pending.findIndex(
-        (o) => o.type === "normal"
+        (o) => o.type === "Normal"
       );
       if (firstNormalIndex === -1) this.pending.push(order);
       else this.pending.splice(firstNormalIndex, 0, order);
     } else {
       this.pending.push(order);
     }
+    log(`Created ${order.type} order #${order.id}: Status: ${order.status}`);
 
     if (botServiceRef) botServiceRef.processNext(); // trigger bots if set
     return order;
@@ -34,13 +43,16 @@ class OrderService {
     return this.pending.shift();
   }
 
-  completeOrder(order) {
-    order.status = "complete";
+  completeOrder(order, botId, duration) {
+    order.status = "COMPLETE";
     this.complete.push(order);
+    log(
+      `Bot #${botId} completed ${order.type} Order #${order.id} - Status: ${order.status} (Processing time: ${duration}s)`
+    );
   }
 
   returnToPending(order) {
-    order.status = "pending";
+    order.status = "PENDING";
     this.pending.unshift(order);
   }
 

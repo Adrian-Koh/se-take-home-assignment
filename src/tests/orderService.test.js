@@ -31,9 +31,9 @@ describe("OrderService", () => {
 
   test("should complete order correctly", () => {
     const order = orderService.createOrder("normal");
-    botService.addBot();
+    const bot = botService.addBot();
 
-    orderService.completeOrder(order);
+    orderService.completeOrder(order, bot.id, 10);
 
     expect(order.status).toBe("complete");
     expect(orderService.complete).toContain(order);
