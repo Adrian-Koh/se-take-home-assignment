@@ -24,12 +24,12 @@ describe("BotService", () => {
     jest.useFakeTimers();
 
     const bot = botService.addBot();
-    const order = orderService.createOrder("normal");
+    const order = orderService.createOrder("Normal");
 
     // Fast-forward 10s
     jest.advanceTimersByTime(10000);
 
-    expect(order.status).toBe("complete");
+    expect(order.status).toBe("COMPLETE");
     expect(orderService.complete).toContain(order);
     expect(botService.processing.size).toBe(0);
   });

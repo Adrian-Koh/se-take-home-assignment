@@ -13,16 +13,16 @@ describe("API routes", () => {
   setupTestEnv();
 
   test("POST /orders should create a new normal order", async () => {
-    const res = await request(app).post("/orders").send({ type: "normal" });
+    const res = await request(app).post("/orders").send({ type: "Normal" });
 
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty("id");
-    expect(res.body.status).toBe("pending");
+    expect(res.body.status).toBe("PENDING");
   });
 
   test("GET /orders works", async () => {
-    await request(app).post("/orders").send({ type: "normal" });
-    await request(app).post("/orders").send({ type: "vip" });
+    await request(app).post("/orders").send({ type: "Normal" });
+    await request(app).post("/orders").send({ type: "VIP" });
     const res = await request(app).get("/orders");
     expect(res.body).toHaveProperty("pending");
     expect(res.body.pending).toHaveLength(2);
